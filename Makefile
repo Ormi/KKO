@@ -3,7 +3,7 @@
 # @author Michal Ormos
 # @email xormos00@stud.fit.vutbr.cz
 # @date March 2020
-# @subjeCt KKO
+# @subject KKO
 # @file Makefile
 ################################################################################
 

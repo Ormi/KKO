@@ -3,7 +3,7 @@
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
- * @subjeCt KKO
+ * @subject KKO
  * @file main.cpp
  * @description This file read arguments, parse them and run program
 *******************************************************************************/
@@ -29,7 +29,7 @@ const char *HELP =
     "Usage:\n"
     "  -c \n      Application with compress input file\n"
     "  -d \n      Application will decompress input file\n"
-    "  -a \n      If enabled, dynamic Huffman coding will be used. Other wise static Huffman coding will be used.\n"
+    "  -a \n      If enabled, adaptive Huffman coding will be used. Other wise static Huffman coding will be used.\n"
     "  -m \n      Activate model\n"
     "  -i <input_file>\n      Name of input stream fo compression/decompression.\n"
     "  -o <output_file>\n      Name of output stream for compresion/decopresion.\n"
@@ -64,12 +64,12 @@ unsigned char *readFile(char *inputFile) {
 
 int main(int argc, char **argv) {
     int argumentParser;
-    int compressMode = 1; /* 1 is static, 2 is dynamic */
+    int compressMode = 1; /* 1 is static, 2 is adaptive */
     bool compress = false;
     bool decompress = false;
     char *inputFile = NULL;
     char *outputFile = NULL;
-    char *model = NULL;
+    bool model = false;
 
     if (argc == 2) {
         if (strcmp(argv[1], "-h") == 0) {
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
             outputFile = optarg;
             break;
         case 'm':
-            model = "pix";
+            model = true;
             break;
         case 'a':
             compressMode = 2;
@@ -139,4 +139,43 @@ int main(int argc, char **argv) {
 	// 	printf("%u", fileBytes[i]);
 	// 	std::cout << std::endl;
 	// }
+
+
+    /* Main system logic */
+    if (compress) {
+        if (model) {
+            // applyModel(fileBytes, fileLength);
+        }
+
+        switch (compressMode) {
+            case 1:
+                _static
+                break;
+            case 2:
+                _adaptive
+                break;
+            default:
+                fprintf(stderr, "Uknown state.\n");
+                break;
+        }
+    } else if (decompress) {
+        switch (compressMode) {
+            case 1:
+                _static
+                break;
+            case 2:
+                _adaptive
+                break;
+            default:
+                fprintf(stderr, "Uknown state.\n");
+                break;
+        }
+
+        if (model) {
+            // reverseModel(fileBytes, fileLength);
+        }        
+    } else {
+        fprintf(stderr, "Uknown state.\n");
+        return OUTPUT_ERROR;        
+    }
 }
