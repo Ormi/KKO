@@ -14,7 +14,7 @@ OUT=huff_codec
 all: $(OUT)
 
 debug:
-	$(CC) -std=c++11 -Wall -Wextra -ggdb3 -o $(OUT)
+	$(CC) -std=c++11 -Wall -Wextra -ggdb3 main.cpp -o $(OUT)
 
 clean:
 	rm -f *.o $(OUT)
