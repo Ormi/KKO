@@ -143,33 +143,33 @@ int main(int argc, char **argv) {
 
     /* Main system logic */
     if (compress) {
-        if (model) {
-            // applyModel(fileBytes, fileLength);
-        }
+    //     if (model) {
+    //         // applyModel(fileBytes, fileLength);
+    //     }
 
-        switch (compressMode) {
-            case 1:
-                _static
-                break;
-            case 2:
-                _adaptive
-                break;
-            default:
-                fprintf(stderr, "Uknown state.\n");
-                break;
-        }
-    } else if (decompress) {
-        switch (compressMode) {
-            case 1:
-                _static
-                break;
-            case 2:
-                _adaptive
-                break;
-            default:
-                fprintf(stderr, "Uknown state.\n");
-                break;
-        }
+    //     switch (compressMode) {
+    //         case 1:
+    //             _static
+    //             break;
+    //         case 2:
+    //             _adaptive
+    //             break;
+    //         default:
+    //             fprintf(stderr, "Uknown state.\n");
+    //             break;
+    //     }
+    // } else if (decompress) {
+    //     switch (compressMode) {
+    //         case 1:
+    //             _static
+    //             break;
+    //         case 2:
+    //             _adaptive
+    //             break;
+    //         default:
+    //             fprintf(stderr, "Uknown state.\n");
+    //             break;
+    //     }
 
         if (model) {
             // reverseModel(fileBytes, fileLength);

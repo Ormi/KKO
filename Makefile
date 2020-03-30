@@ -13,17 +13,17 @@ OUT=huff_codec
 
 all: $(OUT)
 
-main.o: main.cpp tree.h
+main.o: main.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-tree.o: tree.cpp tree.h
+helper.o: helper.cpp helper.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUT): main.o tree.o
+$(OUT): main.o helper.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 debug:
-	$(CC) -std=c++11 -Wall -Wextra -ggdb3 main.cpp tree.cpp -o $(OUT)
+	$(CC) -std=c++11 -Wall -Wextra -ggdb3 main.cpp helper.cpp -o $(OUT)
 
 clean:
 	rm -f *.o $(OUT)

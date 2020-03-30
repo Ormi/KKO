@@ -13,6 +13,10 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <vector>
+
+using namespace std;
 
 uint16_t notYetTransferredNode = 256;
 uint16_t internalNode = 257;
@@ -47,12 +51,24 @@ class tree {
         uint16_t getTreeOrder();
         void setTreeOrder(uint16_t newOrder);    
 
-        void setParentTreeNode(tree *newTreeParent);
         bool isLeafNode();
         bool isInternalNode();
         void incrementTreeWeight();
         bool operator<(tree &other) const;
     };
+
+class bitHandler {
+    size_t bitPositionInByte;    
+    vector<unsigned char> fileBytes;
+    public:
+    bitHandler();
+    void addBitToStream(bool bit);
+    void addBitsToStream(vector<bool> &bits);
+    void addByteToStream(unsigned char byte);
+    unsigned howManyBitLefts();
+    vector<unsigned char> &getBytesFromStream();
+};
+
 struct compareTreeNodes {
     bool operator()(tree *leftNode, tree *rightNode);
 };        

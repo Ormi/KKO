@@ -4,17 +4,34 @@
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
  * @subject KKO
- * @file tree.cpp
+ * @file helper.cpp
  * @description This file read arguments, parse them and run program
 *******************************************************************************/
 
-#include "tree.h"
+#include "helper.h"
+#define ZERO 0
 
-tree::tree():parentNode{nullptr},leftNode{nullptr},rightNode{nullptr},treeWeight{0},nodeSymbol{0},treeOrder{0} {}
+tree::tree()
+    :parentNode{nullptr},
+    leftNode{nullptr},
+    rightNode{nullptr},
+    treeWeight{ZERO},
+    nodeSymbol{ZERO},
+    treeOrder{ZERO} 
+    {}
 tree::tree(uint16_t nodeSymbol, size_t treeWeight)
-:parentNode{nullptr},leftNode{nullptr},rightNode{nullptr},treeWeight{treeWeight},nodeSymbol{nodeSymbol} {}
+    :parentNode{nullptr},
+    leftNode{nullptr},
+    rightNode{nullptr},
+    treeWeight{treeWeight},
+    nodeSymbol{nodeSymbol} 
+    {}
 tree::tree(size_t treeWight, tree *leftNode, tree *rightNode)
-:treeWeight{treeWeight}, parentNode{nullptr}, leftNode{leftNode}, rightNode{rightNode} {}
+    :treeWeight{treeWeight},
+    parentNode{nullptr},
+    leftNode{leftNode},
+    rightNode{rightNode}
+    {}
 
 size_t tree::getTreeWeight() {
     return treeWeight;
@@ -67,4 +84,38 @@ bool tree::operator<(tree &other) const {
 }
 bool compareTreeNodes::operator()(tree *leftNode, tree *rightNode) {
     return (leftNode->getTreeWeight() > rightNode->getTreeWeight());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bitHandler::bitHandler() : bitPositionInByte{ZERO}, fileBytes{ZERO} {}
+
+void bitHandler::addBitToStream(bool bit) {
+    if (bitPositionInByte >= CHAR_BIT) {
+        fileBytes.emplace_back(bit << (CHAR_BIT - 1));
+        bitPositionInByte = 1;
+    } else {
+        fileBytes.back() = fileBytes.back() | bit << (CHAR_BIT - bitPositionInByte - 1);
+        bitPositionInByte++;      
+    }
+}
+
+void bitHandler::addBitsToStream(std::vector<bool> &bits) {
+    for (bool b : bits) {
+        addBitToStream(b);
+    }
+}
+
+void bitHandler::addByteToStream(unsigned char byte) {
+    for (size_t i = 0; i < CHAR_BIT; ++i) {
+        addBitToStream((byte >> (CHAR_BIT - i - 1)) & 1);
+    }
+}
+
+unsigned bitHandler::howManyBitLefts() {
+    return (CHAR_BIT - bitPositionInByte) % CHAR_BIT;
+}
+
+std::vector<unsigned char> &bitHandler::getBytesFromStream() { 
+    return fileBytes; 
 }
