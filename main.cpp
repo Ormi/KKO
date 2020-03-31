@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
 
     //     switch (compressMode) {
     //         case 1:
-    //             _static
+    //             Static
     //             break;
     //         case 2:
     //             _adaptive
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
     // } else if (decompress) {
     //     switch (compressMode) {
     //         case 1:
-    //             _static
+    //             Static
     //             break;
     //         case 2:
     //             _adaptive

@@ -11,7 +11,7 @@
 #include "helper.h"
 #define ZERO 0
 
-tree::tree()
+Tree::Tree()
     :parentNode{nullptr},
     leftNode{nullptr},
     rightNode{nullptr},
@@ -19,78 +19,78 @@ tree::tree()
     nodeSymbol{ZERO},
     treeOrder{ZERO} 
     {}
-tree::tree(uint16_t nodeSymbol, size_t treeWeight)
+Tree::Tree(uint16_t nodeSymbol, size_t treeWeight)
     :parentNode{nullptr},
     leftNode{nullptr},
     rightNode{nullptr},
     treeWeight{treeWeight},
     nodeSymbol{nodeSymbol} 
     {}
-tree::tree(size_t treeWight, tree *leftNode, tree *rightNode)
+Tree::Tree(size_t treeWight, Tree *leftNode, Tree *rightNode)
     :treeWeight{treeWeight},
     parentNode{nullptr},
     leftNode{leftNode},
     rightNode{rightNode}
     {}
 
-size_t tree::getTreeWeight() {
+size_t Tree::getTreeWeight() {
     return treeWeight;
 }
-uint16_t tree::getNodeSymbol() {
+uint16_t Tree::getNodeSymbol() {
     return nodeSymbol;
 }
-uint16_t tree::getTreeOrder() {
+uint16_t Tree::getTreeOrder() {
     return treeOrder;
 }
-void tree::setTreeOrder(uint16_t newTreeOrder) {
+void Tree::setTreeOrder(uint16_t newTreeOrder) {
     treeOrder = newTreeOrder;
 }
-void tree::incrementTreeWeight() {
+void Tree::incrementTreeWeight() {
     treeWeight++;
 }
-void tree::setTreeWeight(size_t newTreeWeight) {
+void Tree::setTreeWeight(size_t newTreeWeight) {
     treeWeight = newTreeWeight;
 }
-void tree::setNodeSymbol(uint16_t newNodeSymbol) {
+void Tree::setNodeSymbol(uint16_t newNodeSymbol) {
     nodeSymbol = newNodeSymbol;
 }
 
-tree *tree::getLeftTreeNode() {
+Tree *Tree::getLeftTreeNode() {
     return leftNode;
 }
-void tree::setLeftTreeNode(tree *newLeftNode) {
+void Tree::setLeftTreeNode(Tree *newLeftNode) {
     leftNode = newLeftNode;
 }
 
-tree *tree::getRightTreeNode() {
+Tree *Tree::getRightTreeNode() {
     return rightNode;
 }
-void tree::setRightTreeNode(tree *newRightNode) {
+void Tree::setRightTreeNode(Tree *newRightNode) {
     rightNode = newRightNode;
 }
 
-tree *tree::getParentTreeNode() {
+Tree *Tree::getParentTreeNode() {
     return parentNode;
 }
-void tree::setParentTreeNode(tree * newParentNode) {
+void Tree::setParentTreeNode(Tree * newParentNode) {
     parentNode = newParentNode;
 }
 
-bool tree::isLeafNode() {
+bool Tree::isLeafNode() {
     return leftNode == nullptr && rightNode == nullptr;
 }
-bool tree::operator<(tree &other) const {
+bool Tree::operator<(Tree &other) const {
     return treeWeight < other.treeWeight;
 }
-bool compareTreeNodes::operator()(tree *leftNode, tree *rightNode) {
+bool compareTreeNodes::operator()(Tree *leftNode, Tree *rightNode) {
     return (leftNode->getTreeWeight() > rightNode->getTreeWeight());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bitHandler::bitHandler() : bitPositionInByte{ZERO}, fileBytes{ZERO} {}
+BitHandler::BitHandler() : bitPositionInByte{ZERO}, fileBytes{ZERO} {}
 
-void bitHandler::addBitToStream(bool bit) {
+void BitHandler::addBitToStream(bool bit) {
     if (bitPositionInByte >= CHAR_BIT) {
         fileBytes.emplace_back(bit << (CHAR_BIT - 1));
         bitPositionInByte = 1;
@@ -100,22 +100,22 @@ void bitHandler::addBitToStream(bool bit) {
     }
 }
 
-void bitHandler::addBitsToStream(std::vector<bool> &bits) {
+void BitHandler::addBitsToStream(std::vector<bool> &bits) {
     for (bool b : bits) {
         addBitToStream(b);
     }
 }
 
-void bitHandler::addByteToStream(unsigned char byte) {
+void BitHandler::addByteToStream(unsigned char byte) {
     for (size_t i = 0; i < CHAR_BIT; ++i) {
         addBitToStream((byte >> (CHAR_BIT - i - 1)) & 1);
     }
 }
 
-unsigned bitHandler::howManyBitLefts() {
+unsigned BitHandler::howManyBitLefts() {
     return (CHAR_BIT - bitPositionInByte) % CHAR_BIT;
 }
 
-std::vector<unsigned char> &bitHandler::getBytesFromStream() { 
+std::vector<unsigned char> &BitHandler::getBytesFromStream() { 
     return fileBytes; 
 }

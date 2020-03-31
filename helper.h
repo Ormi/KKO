@@ -4,7 +4,7 @@
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
  * @subject KKO
- * @file tree.h
+ * @file Tree.h
  * @description This file read arguments, parse them and run program
 *******************************************************************************/
 
@@ -15,6 +15,9 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -22,25 +25,25 @@ uint16_t notYetTransferredNode = 256;
 uint16_t internalNode = 257;
 uint16_t extraNode = 256;
 
-class tree {
-    tree *parentNode;
-    tree *leftNode;
-    tree *rightNode;
+class Tree {
+    Tree *parentNode;
+    Tree *leftNode;
+    Tree *rightNode;
     size_t treeWeight;
     uint16_t nodeSymbol;
     uint16_t treeOrder;
     public:
-        tree();
-        tree(uint16_t nodeSymbol, size_t treeWeight);
-        tree(size_t treeWeight, tree *leftNode, tree *rightNode);
-        tree *getLeftTreeNode();
-        void setLeftTreeNode(tree *newLeftNode);
+        Tree();
+        Tree(uint16_t nodeSymbol, size_t treeWeight);
+        Tree(size_t treeWeight, Tree *leftNode, Tree *rightNode);
+        Tree *getLeftTreeNode();
+        void setLeftTreeNode(Tree *newLeftNode);
 
-        tree *getRightTreeNode();
-        void setRightTreeNode(tree *newRightNode);
+        Tree *getRightTreeNode();
+        void setRightTreeNode(Tree *newRightNode);
 
-        tree *getParentTreeNode();
-        void setParentTreeNode(tree *newTreeParent);
+        Tree *getParentTreeNode();
+        void setParentTreeNode(Tree *newTreeParent);
 
         uint16_t getNodeSymbol();
         void setNodeSymbol(uint16_t newNodeSymbol);
@@ -54,14 +57,14 @@ class tree {
         bool isLeafNode();
         bool isInternalNode();
         void incrementTreeWeight();
-        bool operator<(tree &other) const;
+        bool operator<(Tree &other) const;
     };
 
-class bitHandler {
+class BitHandler {
     size_t bitPositionInByte;    
     vector<unsigned char> fileBytes;
     public:
-    bitHandler();
+    BitHandler();
     void addBitToStream(bool bit);
     void addBitsToStream(vector<bool> &bits);
     void addByteToStream(unsigned char byte);
@@ -70,7 +73,7 @@ class bitHandler {
 };
 
 struct compareTreeNodes {
-    bool operator()(tree *leftNode, tree *rightNode);
+    bool operator()(Tree *leftNode, Tree *rightNode);
 };        
 
 #endif

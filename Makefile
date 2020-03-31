@@ -23,7 +23,7 @@ $(OUT): main.o helper.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 debug:
-	$(CC) -std=c++11 -Wall -Wextra -ggdb3 main.cpp helper.cpp -o $(OUT)
+	$(CC) -std=c++11 -Wall -Wextra -ggdb3 main.cpp helper.cpp static.cpp -o $(OUT)
 
 clean:
 	rm -f *.o $(OUT)
