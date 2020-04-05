@@ -13,13 +13,16 @@ OUT=huff_codec
 
 all: $(OUT)
 
-main.o: main.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
-
 helper.o: helper.cpp helper.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUT): main.o helper.o
+static.o: static.cpp static.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OUT): main.o helper.o static.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 debug:
