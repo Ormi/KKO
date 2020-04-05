@@ -11,14 +11,18 @@
 #ifndef STATIC_H
 #define STATIC_H
 
-#include "helper.h"
+#include <stdio.h>
 
-const uint16_t INTERVAL_SIZE = 256;
+#include <algorithm>
+#include <queue>
+
+#include "helper.h"
+using namespace std;
 
 class Static {
 	vector<size_t> symbolFrequency;
-  	vector<std::pair<unsigned char, vector<bool>>> synbolCode;
-  	std::priority_queue<Tree *, vector<Tree *>, compareTreeNodes>huffmanCodeTree;
+  	vector<pair<unsigned char, vector<bool>>> symbolCode;
+  	priority_queue<Tree *, vector<Tree *>, compareTreeNodes>huffmanCodeTree;
   	unsigned char *fileBytes;
   	size_t fileLength;
   	size_t countOfBytes;

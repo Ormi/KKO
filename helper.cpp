@@ -12,21 +12,21 @@
 #define ZERO 0
 
 Tree::Tree()
-    :parentNode{nullptr},
+    :treeWeight{ZERO},
+    parentNode{nullptr},
     leftNode{nullptr},
     rightNode{nullptr},
-    treeWeight{ZERO},
     nodeSymbol{ZERO},
     treeOrder{ZERO} 
     {}
 Tree::Tree(uint16_t nodeSymbol, size_t treeWeight)
-    :parentNode{nullptr},
+    :treeWeight{treeWeight},
+    parentNode{nullptr},
     leftNode{nullptr},
     rightNode{nullptr},
-    treeWeight{treeWeight},
     nodeSymbol{nodeSymbol} 
     {}
-Tree::Tree(size_t treeWight, Tree *leftNode, Tree *rightNode)
+Tree::Tree(size_t treeWeight, Tree *leftNode, Tree *rightNode)
     :treeWeight{treeWeight},
     parentNode{nullptr},
     leftNode{leftNode},
@@ -116,6 +116,6 @@ unsigned BitHandler::howManyBitLefts() {
     return (CHAR_BIT - bitPositionInByte) % CHAR_BIT;
 }
 
-std::vector<unsigned char> &BitHandler::getBytesFromStream() { 
+vector<unsigned char> &BitHandler::getBytesFromStream() { 
     return fileBytes; 
 }

@@ -21,15 +21,11 @@
 
 using namespace std;
 
-uint16_t notYetTransferredNode = 256;
-uint16_t internalNode = 257;
-uint16_t extraNode = 256;
-
 class Tree {
+    size_t treeWeight;    
     Tree *parentNode;
     Tree *leftNode;
     Tree *rightNode;
-    size_t treeWeight;
     uint16_t nodeSymbol;
     uint16_t treeOrder;
     public:
@@ -60,20 +56,20 @@ class Tree {
         bool operator<(Tree &other) const;
     };
 
+struct compareTreeNodes {
+    bool operator()(Tree *leftNode, Tree *rightNode);
+};  
+
 class BitHandler {
     size_t bitPositionInByte;    
     vector<unsigned char> fileBytes;
     public:
-    BitHandler();
-    void addBitToStream(bool bit);
-    void addBitsToStream(vector<bool> &bits);
-    void addByteToStream(unsigned char byte);
-    unsigned howManyBitLefts();
-    vector<unsigned char> &getBytesFromStream();
+        BitHandler();
+        void addBitToStream(bool bit);
+        void addBitsToStream(vector<bool> &bits);
+        void addByteToStream(unsigned char byte);
+        unsigned howManyBitLefts();
+        vector<unsigned char> &getBytesFromStream();
 };
-
-struct compareTreeNodes {
-    bool operator()(Tree *leftNode, Tree *rightNode);
-};        
 
 #endif

@@ -140,42 +140,42 @@ int main(int argc, char **argv) {
 	// 	std::cout << std::endl;
 	// }
 
+            vector<unsigned char> decoded_bytes;
 
     /* Main system logic */
     if (compress) {
-    //     if (model) {
-    //         // applyModel(fileBytes, fileLength);
-    //     }
+        // if (model) {
+        //     // applyModel(fileBytes, fileLength);
+        // }
 
-    //     switch (compressMode) {
-    //         case 1:
-    //             Static
-    //             break;
-    //         case 2:
-    //             _adaptive
-    //             break;
-    //         default:
-    //             fprintf(stderr, "Uknown state.\n");
-    //             break;
-    //     }
-    // } else if (decompress) {
-    //     switch (compressMode) {
-    //         case 1:
-    //             Static
-    //             break;
-    //         case 2:
-    //             _adaptive
-    //             break;
-    //         default:
-    //             fprintf(stderr, "Uknown state.\n");
-    //             break;
-    //     }
-
-        if (model) {
-            // reverseModel(fileBytes, fileLength);
-        }        
+        if(compressMode == 1) {
+            printf("I am strating to compress in static mode\n");
+            Static sh{fileBytes, fileLength};
+            sh.encodeBytes(outputStream);
+        } else {
+            fprintf(stderr, "Uknown state1.\n");
+        }
+    } else if (decompress) {
+        if(compressMode == 1) {
+            fileBytes[fileLength] = '\0';
+            fileLength--;
+            Static sh{fileBytes, fileLength};
+            sh.decodeBytes(decoded_bytes);
+        } else {
+            fprintf(stderr, "Uknown state2.\n");
+        }
+        // if (model) {
+        //     // reverseModel(fileBytes, fileLength);
+        // }        
+        for (unsigned char b : decoded_bytes) {
+            fputc(b, outputStream);
+        }
     } else {
-        fprintf(stderr, "Uknown state.\n");
+        fprintf(stderr, "Uknown state3.\n");
         return OUTPUT_ERROR;        
     }
+
+  fclose(outputStream);
+  free(fileBytes);
+  return 0;    
 }
