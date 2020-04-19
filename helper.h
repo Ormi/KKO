@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @project Static and Adaptive Huffman Coding 
+ * @project Static and Adaptive Huffman Coding
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
@@ -22,7 +22,7 @@
 using namespace std;
 
 class Tree {
-    size_t treeWeight;    
+    size_t treeWeight;
     Tree *parentNode;
     Tree *leftNode;
     Tree *rightNode;
@@ -48,7 +48,7 @@ class Tree {
         void setTreeWeight(size_t newTreeWeight);
 
         uint16_t getTreeOrder();
-        void setTreeOrder(uint16_t newOrder);    
+        void setTreeOrder(uint16_t newOrder);
 
         bool isLeafNode();
         bool isInternalNode();
@@ -58,11 +58,11 @@ class Tree {
 
 struct compareTreeNodes {
     bool operator()(Tree *leftNode, Tree *rightNode);
-};  
+};
 
 class BitHandler {
-    size_t bitPositionInByte;    
-    vector<unsigned char> fileBytes;
+    vector<unsigned char> bytes;
+    size_t bitPositionInByte;
     public:
         BitHandler();
         void addBitToStream(bool bit);

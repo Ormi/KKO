@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @project Static and Adaptive Huffman Coding 
+ * @project Static and Adaptive Huffman Coding
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
@@ -17,14 +17,14 @@ Tree::Tree()
     leftNode{nullptr},
     rightNode{nullptr},
     nodeSymbol{ZERO},
-    treeOrder{ZERO} 
+    treeOrder{ZERO}
     {}
 Tree::Tree(uint16_t nodeSymbol, size_t treeWeight)
     :treeWeight{treeWeight},
     parentNode{nullptr},
     leftNode{nullptr},
     rightNode{nullptr},
-    nodeSymbol{nodeSymbol} 
+    nodeSymbol{nodeSymbol}
     {}
 Tree::Tree(size_t treeWeight, Tree *leftNode, Tree *rightNode)
     :treeWeight{treeWeight},
@@ -33,20 +33,21 @@ Tree::Tree(size_t treeWeight, Tree *leftNode, Tree *rightNode)
     rightNode{rightNode}
     {}
 
-size_t Tree::getTreeWeight() {
-    return treeWeight;
-}
 uint16_t Tree::getNodeSymbol() {
     return nodeSymbol;
+}
+size_t Tree::getTreeWeight() {
+    return treeWeight;
 }
 uint16_t Tree::getTreeOrder() {
     return treeOrder;
 }
+
 void Tree::setTreeOrder(uint16_t newTreeOrder) {
     treeOrder = newTreeOrder;
 }
 void Tree::incrementTreeWeight() {
-    treeWeight++;
+    ++treeWeight;
 }
 void Tree::setTreeWeight(size_t newTreeWeight) {
     treeWeight = newTreeWeight;
@@ -55,25 +56,24 @@ void Tree::setNodeSymbol(uint16_t newNodeSymbol) {
     nodeSymbol = newNodeSymbol;
 }
 
-Tree *Tree::getLeftTreeNode() {
-    return leftNode;
-}
 void Tree::setLeftTreeNode(Tree *newLeftNode) {
     leftNode = newLeftNode;
-}
-
-Tree *Tree::getRightTreeNode() {
-    return rightNode;
 }
 void Tree::setRightTreeNode(Tree *newRightNode) {
     rightNode = newRightNode;
 }
+void Tree::setParentTreeNode(Tree *newParentNode) {
+    parentNode = newParentNode;
+}
 
+Tree *Tree::getLeftTreeNode() {
+    return leftNode;
+}
+Tree *Tree::getRightTreeNode() {
+    return rightNode;
+}
 Tree *Tree::getParentTreeNode() {
     return parentNode;
-}
-void Tree::setParentTreeNode(Tree * newParentNode) {
-    parentNode = newParentNode;
 }
 
 bool Tree::isLeafNode() {
@@ -88,15 +88,15 @@ bool compareTreeNodes::operator()(Tree *leftNode, Tree *rightNode) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-BitHandler::BitHandler() : bitPositionInByte{ZERO}, fileBytes{ZERO} {}
+BitHandler::BitHandler() : bytes{ZERO}, bitPositionInByte{ZERO} {}
 
 void BitHandler::addBitToStream(bool bit) {
-    if (bitPositionInByte >= CHAR_BIT) {
-        fileBytes.emplace_back(bit << (CHAR_BIT - 1));
-        bitPositionInByte = 1;
+    if (bitPositionInByte < CHAR_BIT) {
+        bytes.back() |= bit << (CHAR_BIT - bitPositionInByte - 1);
+        bitPositionInByte++;
     } else {
-        fileBytes.back() = fileBytes.back() | bit << (CHAR_BIT - bitPositionInByte - 1);
-        bitPositionInByte++;      
+        bytes.emplace_back(bit << (CHAR_BIT - 1));
+        bitPositionInByte = 1;
     }
 }
 
@@ -116,6 +116,6 @@ unsigned BitHandler::howManyBitLefts() {
     return (CHAR_BIT - bitPositionInByte) % CHAR_BIT;
 }
 
-vector<unsigned char> &BitHandler::getBytesFromStream() { 
-    return fileBytes; 
+vector<unsigned char> &BitHandler::getBytesFromStream() {
+    return bytes;
 }

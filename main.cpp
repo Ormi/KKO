@@ -19,10 +19,10 @@
 
 #include "adaptive.h"
 #include "static.h"
-#include "model.h"
+// #include "model.h"
 
 size_t fileLength;
-const char *HELP = 
+const char *HELP =
     "This is program for Static and Adaptive Huffman Coding\n"
     "Version 1.0.0\n"
     "\n"
@@ -39,7 +39,6 @@ const char *HELP =
     "Created by @xormos00 for KKO, BUT FIT in MIT license.";
 
 unsigned char *readFile(char *inputFile) {
-
     FILE *inputStream;
     size_t fileSize;
     unsigned char *fileBytes;
@@ -53,14 +52,40 @@ unsigned char *readFile(char *inputFile) {
     fseek(inputStream, 0L, SEEK_END);
     fileSize = ftell(inputStream);
     fseek(inputStream, 0L, SEEK_SET);
-    
+
     fileBytes = (unsigned char *)malloc(sizeof(unsigned char) * fileSize);
     fileLength = fread(fileBytes, sizeof(unsigned char), fileSize, inputStream);
     fclose(inputStream);
 
     return fileBytes;
-
 }
+
+void applyModel(unsigned char *fileBytes, size_t fileLength) {
+  unsigned char prev = fileBytes[0];
+  for (size_t i = 1; i < fileLength; ++i) {
+    unsigned char current = fileBytes[i];
+    fileBytes[i] = current - prev;
+    prev = current;
+  }
+}
+
+/**
+ * @TODO
+ */
+void reverseModel(unsigned char *fileBytes, size_t fileLength) {
+  for (size_t i = 1; i < fileLength; ++i) {
+    unsigned char current = fileBytes[i];
+    fileBytes[i] = current + fileBytes[i - 1];
+    }
+    // size_t position = 1;
+    // while (position < fileLength) {
+    //     ++position;
+    //     unsigned char currentByteValue = fileBytes[position];
+    //     fileBytes[position] = currentByteValue + fileBytes[position - 1];
+    //     }
+}
+
+
 
 int main(int argc, char **argv) {
     int argumentParser;
@@ -70,6 +95,7 @@ int main(int argc, char **argv) {
     char *inputFile = NULL;
     char *outputFile = NULL;
     bool model = false;
+    int width = 512;
 
     if (argc == 2) {
         if (strcmp(argv[1], "-h") == 0) {
@@ -78,7 +104,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    while ((argumentParser = getopt(argc, argv, "cdi:o:ma:w:")) != -1) {    
+    while ((argumentParser = getopt(argc, argv, "cdai:o:mh:w:")) != -1) {
         switch (argumentParser) {
         case 'c':
             compress = true;
@@ -99,7 +125,7 @@ int main(int argc, char **argv) {
             compressMode = 2;
             break;
         case 'w':
-            // ?
+            width = atoi(optarg);
             break;
         default:
             fprintf(stderr, "%s\n", HELP);
@@ -124,58 +150,57 @@ int main(int argc, char **argv) {
 
     unsigned char *fileBytes;
     fileBytes = readFile(inputFile);
-    
 
     /* Prepare the output file */
     FILE *outputStream = fopen(outputFile, "w");
     if (!outputStream) {
         fprintf(stderr, "Cannot read the output file. Please check if it exists.\n");
         return OUTPUT_ERROR;
-    }    
-
-    // printf(fileBytes);
-    printf("%zu\n", fileLength);
-	// for (int i = 0; i < 100000; i++){
-	// 	printf("%u", fileBytes[i]);
-	// 	std::cout << std::endl;
-	// }
-
-            vector<unsigned char> decoded_bytes;
+    }
+    vector<unsigned char> decodedBytes;
 
     /* Main system logic */
     if (compress) {
-        // if (model) {
-        //     // applyModel(fileBytes, fileLength);
-        // }
-
+        if (model) {
+            applyModel(fileBytes, fileLength);
+        }
         if(compressMode == 1) {
-            printf("I am strating to compress in static mode\n");
-            Static sh{fileBytes, fileLength};
-            sh.encodeBytes(outputStream);
+            Static Static{fileBytes, fileLength};
+            Static.encodeBytes(outputStream);
+        } else if (compressMode == 2) {
+            Adaptive ah{fileBytes, fileLength};
+            ah.encodeFile(outputStream);
         } else {
-            fprintf(stderr, "Uknown state1.\n");
+            fprintf(stderr, "Uknown state of compression.\n");
+        }
+        if (!model) {
+            fputc(256, outputStream);
         }
     } else if (decompress) {
-        if(compressMode == 1) {
+        if (!model) {
             fileBytes[fileLength] = '\0';
             fileLength--;
-            Static sh{fileBytes, fileLength};
-            sh.decodeBytes(decoded_bytes);
-        } else {
-            fprintf(stderr, "Uknown state2.\n");
         }
-        // if (model) {
-        //     // reverseModel(fileBytes, fileLength);
-        // }        
-        for (unsigned char b : decoded_bytes) {
+        if(compressMode == 1) {
+            Static Static{fileBytes, fileLength};
+            Static.decodeBytes(decodedBytes);
+        } else if (compressMode == 2) {
+            Adaptive ah{fileBytes, fileLength};
+            ah.decodeFile(decodedBytes);
+        } else {
+            fprintf(stderr, "Uknown state of decompression\n");
+        }
+        if (model) {
+            reverseModel(decodedBytes.data(), decodedBytes.size());
+        }
+        for (unsigned char b : decodedBytes) {
             fputc(b, outputStream);
         }
     } else {
-        fprintf(stderr, "Uknown state3.\n");
-        return OUTPUT_ERROR;        
+        fprintf(stderr, "Uknown state of type of compression\n");
+        return OUTPUT_ERROR;
     }
-
   fclose(outputStream);
   free(fileBytes);
-  return 0;    
+  return 0;
 }

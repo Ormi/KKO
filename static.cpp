@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @project Static and Adaptive Huffman Coding 
+ * @project Static and Adaptive Huffman Coding
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
@@ -18,9 +18,14 @@ Static::Static(unsigned char *fileBytes, size_t fileLength)
         size_t counter = 0;
         symbolFrequency.resize(256);
         while (counter < fileLength) {
-            counter++;            
+            ++counter;
             ++symbolFrequency[fileBytes[counter]];
-        }     
+        }
+        counter = 0;
+        symbolFrequency.resize(256);
+        for (counter = 0; counter < fileLength; ++counter) {
+            ++symbolFrequency[fileBytes[counter]];
+        }
     };
 
 Static::~Static() {
@@ -30,7 +35,6 @@ Static::~Static() {
         huffmanCodeTree.pop();
         freeTree(treeNode);
     }
-    
 }
 
 void Static::freeTree(Tree *treeNode) {
@@ -73,11 +77,11 @@ void Static::saveCode(Tree *treeNode, vector<bool> treeCode) {
     vector<bool> beginSymbol;
     if (!treeNode) {
         return;
-    } 
+    }
     if (treeNode->isLeafNode()) {
         symbolCode.emplace_back(make_pair(treeNode->getNodeSymbol(), treeCode));
         return;
-    }        
+    }
     beginCode = treeCode;
     beginSymbol = treeCode;
     beginCode.emplace_back(0);
@@ -95,11 +99,11 @@ void Static::buildTree() {
         if (frequencies > 0) {
             huffmanCodeTree.push(new Tree(counter, frequencies));
         }
-    } 
+    }
     if (huffmanCodeTree.size() == 1) {
         huffmanCodeTree.push(new Tree(256, 1));
     }
-    
+
     while (huffmanCodeTree.size() != 1) {
         leftNode = huffmanCodeTree.top();
         huffmanCodeTree.pop();
@@ -161,7 +165,7 @@ void Static::makeTreeCanonical() {
             }
             reverse(symbolLeft.second.begin(), symbolLeft.second.end());
         }
-    }    
+    }
 }
 
 void Static::encodeBytes(FILE *outputBytes) {
@@ -176,9 +180,8 @@ void Static::encodeBytes(FILE *outputBytes) {
         return;
     }
     buildTree();
-    printf("DEBUG1\n");
     saveCode();
-    makeTreeCanonical(); 
+    makeTreeCanonical();
     for (auto &i : symbolCode) {
         actualByte = max((unsigned char)i.second.size(), actualByte);
     }
@@ -210,13 +213,13 @@ void Static::encodeBytes(FILE *outputBytes) {
     for (auto &i : byteHeader) {
         for (unsigned char c : i) {
             fputc(c, outputBytes);
-        }   
+        }
     }
     for (auto &byte : packBits.getBytesFromStream()) {
         fputc(byte, outputBytes);
-    }         
+    }
     /* Add closing char flag for decompress */
-    fputc(256, outputBytes);
+    // fputc(256, outputBytes);
 }
 
 void Static::decodeBytes(vector<unsigned char> &decodeBytes) {
@@ -228,7 +231,7 @@ void Static::decodeBytes(vector<unsigned char> &decodeBytes) {
     size_t indexLength, initLengthCounter;
     unsigned char symbol;
 
-    if(actualBit + 1 >= fileLength) {
+    if(fileLength < actualBit + 1) {
         fprintf(stderr, "Something went wrong, skipping.\n");
         return;
     }
@@ -251,9 +254,8 @@ void Static::decodeBytes(vector<unsigned char> &decodeBytes) {
         byteLengths.emplace_back(indexLength);
         symbolsLength = symbolsLength + indexLength;
     }
-    if (actualBit +1 + symbolsLength >= fileLength) {
-        fprintf(stderr, "Something went wrong, skipping.\n");
-        return;        
+    if (fileLength < actualBit + symbolsLength + 1) {
+        return;
     }
     for (index = actualBit + 1 + symbolsLength; position < index; ++position) {
         othersSymbols.emplace_back(fileBytes[position]);
@@ -269,7 +271,7 @@ void Static::decodeBytes(vector<unsigned char> &decodeBytes) {
             beginCode.emplace_back(fcfsCounterZero);
             beginSymbol.emplace_back(fcfsCounterFirst);
         }
-    } 
+    }
     {
         fcfsCounterZero = 0, fcfsCounterFirst = 0;
         while (hasNext()) {
@@ -286,5 +288,5 @@ void Static::decodeBytes(vector<unsigned char> &decodeBytes) {
                 fcfsCounterFirst = 0, fcfsCounterZero = 0;
                 }
         }
-    }            
+    }
 }

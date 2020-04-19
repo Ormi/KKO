@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @project Static and Adaptive Huffman Coding 
+ * @project Static and Adaptive Huffman Coding
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020

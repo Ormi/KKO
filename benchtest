@@ -1,0 +1,47 @@
+#! /usr/bin/env bash
+
+array=(../data/*.raw)
+
+echo "filename, HS, , HSm, , HA, , HAm, "
+echo " , time, size, time, size, time, size, time, size"
+
+for i in "${array[@]}"
+do
+	# echo "File: $i:"
+
+	echo -n $i ","
+
+	time=$(perf stat ./huff_codec -c -i $i -o out 2>&1 >/dev/null | grep "time" | awk '{print $1}')
+    echo "1"
+	size_new=$(wc -c out | awk '{print $1}')
+    echo "2"
+	size_old=$(wc -c $i | awk '{print $1}')
+    echo "3"
+	size=$(python -c "size = 8.0/($size_old.0/$size_new.0); print(size);")
+
+	echo -n $time "," $size ","
+
+
+	time=$(perf stat ./huff_codec -c -m -h static -w 512 -i $i -o out 2>&1 >/dev/null | grep "time" | awk '{print $1}')
+	size_new=$(wc -c out | awk '{print $1}')
+	size_old=$(wc -c $i | awk '{print $1}')
+	size=$(python -c "size = 8.0/($size_old.0/$size_new.0); print(size);")
+
+	echo -n $time "," $size ","
+
+
+	time=$(perf stat ./huff_codec -c -a -i $i -o out 2>&1 >/dev/null | grep "time" | awk '{print $1}')
+	size_new=$(wc -c out | awk '{print $1}')
+	size_old=$(wc -c $i | awk '{print $1}')
+	size=$(python -c "size = 8.0/($size_old.0/$size_new.0); print(size);")
+
+	echo -n $time "," $size ","
+
+
+	time=$(perf stat ./huff_codec -c -m -h adaptive -w 512 -i $i -o out 2>&1 >/dev/null | grep "time" | awk '{print $1}')
+	size_new=$(wc -c out | awk '{print $1}')
+	size_old=$(wc -c $i | awk '{print $1}')
+	size=$(python -c "size = 8.0/($size_old.0/$size_new.0); print(size);")
+
+	echo $time "," $size
+done
