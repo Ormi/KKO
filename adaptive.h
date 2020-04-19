@@ -1,21 +1,41 @@
 /*******************************************************************************
- * @project Static and Adaptive Huffman Coding 
+ * @project Static and Adaptive Huffman Coding
  * @author Michal Ormos
  * @email xormos00@stud.fit.vutbr.cz
  * @date March 2020
  * @subject KKO
  * @file adaptive.h
- * @description This file read arguments, parse them and run program
+ * @description Declaration of Adaptive Huffman functions
 *******************************************************************************/
 
 #ifndef ADAPTIVE_H
 #define ADAPTIVE_H
+#include <stdint.h>
 
-class _adaptive {
+#include <stdio.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <queue>
+#include "helper.h"
+
+using namespace std;
+
+class Adaptive {
+  Tree *treeNodeParent;
+  Tree *treeSymbols[2 * 257];
+  Tree *treeOrders[2 * 257];
   unsigned char *fileBytes;
   size_t fileLength;
-
-public:
+  deque<bool> bitsSymbols;
+  public:
+    Adaptive(unsigned char *fileBytes, size_t fileLength);
+    Tree *createTreeTree(unsigned char treeSymbol);
+    void editTree(Tree *treeNode);
+    void encodeTreeSymbol(Tree *treeNode, BitHandler &BitHandler);
+    void encodeFile(FILE *outputFile);
+    void decodeFile(vector<unsigned char> &bytesDecoded);
+    void freeTree(Tree *treeNode);
+    ~Adaptive();
 };
 
 #endif
